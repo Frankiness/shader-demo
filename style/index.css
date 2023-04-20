@@ -11,8 +11,8 @@ body {
   overflow: hidden;
 }
 #container{
-  width: 600px;
-  height: 600px;
+  /* width: 700px;
+  height: 700px; */
   margin: 0 auto;
   position: absolute;
   left: 50%;
