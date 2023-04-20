@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/index.css" />
+    <title>gradient</title>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+
+       void main()
+       {
+       vUv = uv;
+       vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+       gl_Position = projectionMatrix * mvPosition;
+       }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      uniform float time;
+
+        varying vec2 vUv;
+
+        void main( void ) {
+
+        vec2 position = - 1.0 + 2.0 * vUv;
+
+        float red = abs( sin( position.x * position.y + time / 5.0 ) );
+        float green = abs( sin( position.x * position.y + time / 4.0 ) );
+        float blue = abs( sin( position.x * position.y + time / 3.0 ) );
+        gl_FragColor = vec4( red, green, blue, 1.0 );
+
+        }
+    </script>
+
+    <script src="../utils/three.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../utils/three.module.js"
+        }
+      }
+    </script>
+    <script type="module" src="../utils/HTMLTemplate.js"></script>
+    <script>
+      let uniforms;
+
+      function init() {
+        let geometry = new THREE.PlaneBufferGeometry(2, 2);
+
+        uniforms = {
+          time: {
+            type: "f",
+            value: 1.0,
+          },
+          resolution: {
+            type: "v2",
+            value: new THREE.Vector2(),
+          },
+        };
+
+        let material = new THREE.ShaderMaterial({
+          uniforms: uniforms,
+          vertexShader: document.getElementById("vertexShader").textContent,
+          fragmentShader: document.getElementById("fragmentShader").textContent,
+        });
+
+        let mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+      }
+
+      init();
+    </script>
+  </body>
+</html>
